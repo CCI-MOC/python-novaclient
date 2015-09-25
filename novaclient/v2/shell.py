@@ -2091,6 +2091,9 @@ def do_volume_delete(cs, args):
     'device', metavar='<device>', default=None, nargs='?',
     help=_('Name of the device e.g. /dev/vdb. '
            'Use "auto" for autoassign (if supported)'))
+@cliutils.arg(
+    '--service-provider', metavar='<service_provider>', default=None, nargs='?',
+    help=_('Name of the service provider e.g. NEU '))
 def do_volume_attach(cs, args):
     """Attach a volume to a server."""
     if args.device == 'auto':
@@ -2098,7 +2101,8 @@ def do_volume_attach(cs, args):
 
     volume = cs.volumes.create_server_volume(_find_server(cs, args.server).id,
                                              args.volume,
-                                             args.device)
+                                             args.device,
+                                             args.service_provider)
     _print_volume(volume)
 
 

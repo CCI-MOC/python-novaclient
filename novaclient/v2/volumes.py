@@ -112,7 +112,8 @@ class VolumeManager(base.ManagerWithFind):
         with self.alternate_service_type('volume'):
             self._delete("/volumes/%s" % base.getid(volume))
 
-    def create_server_volume(self, server_id, volume_id, device):
+    def create_server_volume(self, server_id, volume_id, device,
+                             service_provider=None):
         """
         Attach a volume identified by the volume ID to the given server ID
 
@@ -121,8 +122,14 @@ class VolumeManager(base.ManagerWithFind):
         :param device: The device name
         :rtype: :class:`Volume`
         """
-        body = {'volumeAttachment': {'volumeId': volume_id,
-                                     'device': device}}
+
+        if service_provider is None:
+            body = {'volumeAttachment': {'volumeId': volume_id,
+                                         'device': device}}
+        else:
+            body = {'volumeAttachment': {'volumeId': volume_id,
+                                         'device': device,
+                                         'serviceProvider': service_provider}}
         return self._create("/servers/%s/os-volume_attachments" % server_id,
                             body, "volumeAttachment")
 
